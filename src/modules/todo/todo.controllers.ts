@@ -26,6 +26,7 @@ class todoController implements IController {
       this.update
     )
     this.router.delete(`${this.path}/:id`, authenticationMiddleWare, this.delete)
+    this.router.get(`${this.path}/`, authenticationMiddleWare, this.getAll)
   }
 
   private create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -67,6 +68,17 @@ class todoController implements IController {
       res.status(204).json()
     } else next(new HttpException(data.val, 404))
   }
+  private getAll = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const data = await this.TodoService.getAll(res.locals.userId)
+
+    if (data.ok) {
+      res.status(200).json({
+        message: 'todos found',
+        data: data.val,
+      })
+    } else next(new HttpException(data.val, 404))
+  }
+  
 }
 
 export default todoController

@@ -53,4 +53,11 @@ export default class TodoService implements ITodoService {
 
     return Ok(true)
   }
+  
+  getAll = async (userId: string): Promise<Result<ItodoSchema[], string>> => {
+    const todos: ItodoSchema[] = await Todo.find({ createdBy: userId }, { __v: false })
+
+    return Ok(todos)
+  }
+
 }
